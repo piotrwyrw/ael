@@ -1,2 +1,2 @@
-# ael
-Command line interface for Aether
+## AEL
+Command line interface for [Vanadium Aether](https://github.com/Vanadium-Development/aether) written in Go.
