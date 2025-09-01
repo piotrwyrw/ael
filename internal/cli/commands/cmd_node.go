@@ -48,6 +48,35 @@ func (ael *AelContext) CmdListNodes(ctx context.Context, cmd *cli.Command) error
 	return nil
 }
 
+func (ael *AelContext) CmdRemoveNode(ctx context.Context, cmd *cli.Command) error {
+	if err := ael.ensureConfiguration(); err != nil {
+		return err
+	}
+
+	cfg := ael.Config
+
+	nodeName := cmd.String("name")
+
+	if nodeName == "" {
+		return cli.Exit("Node name must not be empty", 1)
+	}
+
+	node, nodeIndex := cfg.FindNodeByName(nodeName)
+
+	if node == nil {
+		return cli.Exit("Node \""+nodeName+"\" does not exist", 1)
+	}
+
+	cfg.Nodes = append(cfg.Nodes[:nodeIndex], cfg.Nodes[nodeIndex+1:]...)
+	err := cfg.StoreConfiguration()
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("Removed node \"%s\"\n", nodeName)
+	return nil
+}
+
 func (ael *AelContext) CmdAddNode(ctx context.Context, cmd *cli.Command) error {
 	if err := ael.ensureConfiguration(); err != nil {
 		return err
@@ -66,7 +95,7 @@ func (ael *AelContext) CmdAddNode(ctx context.Context, cmd *cli.Command) error {
 		return cli.Exit("Node address must not be empty", 1)
 	}
 
-	existingNode := cfg.FindNodeByName(nodeName)
+	existingNode, _ := cfg.FindNodeByName(nodeName)
 	if existingNode != nil {
 		return cli.Exit("Node \""+nodeName+"\" already exists", 1)
 	}
@@ -76,7 +105,7 @@ func (ael *AelContext) CmdAddNode(ctx context.Context, cmd *cli.Command) error {
 		return cli.Exit("Invalid node address", 1)
 	}
 
-	existingNode = cfg.FindNodeByAddress(nodeIP)
+	existingNode, _ = cfg.FindNodeByAddress(nodeIP)
 	if existingNode != nil {
 		return cli.Exit("Node at "+nodeIP.String()+" already exists: "+nodeName, 1)
 	}

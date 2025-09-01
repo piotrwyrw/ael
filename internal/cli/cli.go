@@ -34,7 +34,7 @@ func InitializeCLI(config *config.AelConfig) error {
 					&cli.StringFlag{
 						Name:     "name",
 						Aliases:  []string{"n"},
-						Usage:    "Name of the Aether Node Entry",
+						Usage:    "Name of the New Aether Node Entry",
 						Required: true,
 					},
 					&cli.StringFlag{
@@ -49,6 +49,15 @@ func InitializeCLI(config *config.AelConfig) error {
 			{
 				Name:  "remove",
 				Usage: "Remove an Existing Aether Node",
+				Flags: []cli.Flag{
+					&cli.StringFlag{
+						Name:     "name",
+						Aliases:  []string{"n"},
+						Usage:    "Name of the Aether Node to Remove",
+						Required: true,
+					},
+				},
+				Action: ctx.CmdRemoveNode,
 			},
 		},
 	}

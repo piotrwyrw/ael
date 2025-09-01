@@ -42,24 +42,24 @@ func DoesConfigExist() bool {
 	return !os.IsNotExist(err)
 }
 
-func (config *AelConfig) FindNodeByName(name string) *Node {
-	for _, node := range config.Nodes {
+func (config *AelConfig) FindNodeByName(name string) (node *Node, index int) {
+	for i, node := range config.Nodes {
 		if node.Name == name {
-			return &node
+			return &node, i
 		}
 	}
 
-	return nil
+	return nil, -1
 }
 
-func (config *AelConfig) FindNodeByAddress(address net.IP) *Node {
-	for _, node := range config.Nodes {
+func (config *AelConfig) FindNodeByAddress(address net.IP) (node *Node, index int) {
+	for i, node := range config.Nodes {
 		if node.IP.Equal(address) {
-			return &node
+			return &node, i
 		}
 	}
 
-	return nil
+	return nil, -1
 }
 
 func (config *AelConfig) StoreConfiguration() error {
