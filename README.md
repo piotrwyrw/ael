@@ -22,4 +22,4 @@ execute rendering jobs around AEL instructions.
 > `ael node list`
 
 > **Add Node to Pool**<br>
-> `ael node add <ip>`
+> `ael node add [--address | -a] <ip> [--name | -n] <name>`
